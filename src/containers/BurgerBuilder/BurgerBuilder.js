@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal.js';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary.js';
 
 const INGREDIENTS_PRICES = {
   salad: 0.5,
@@ -23,6 +25,17 @@ class BurgerBuilder extends Component {
     purchasable: false
   };
 
+  updatePurchaseState(ingredients) {
+    const sum = Object.keys(ingredients)
+      .map(igKey => {
+        return ingredients[igKey];
+      })
+      .reduce((sum, el) => {
+        return sum + el;
+      }, 0);
+    this.setState({ purchasable: sum > 0 });
+  }
+
   addIngredientHandler = type => {
     const oldCount = this.state.ingredients[type];
     const updatedCount = oldCount + 1;
@@ -34,6 +47,7 @@ class BurgerBuilder extends Component {
     const addOns = INGREDIENTS_PRICES[type];
     const newPrice = originalPrice + addOns;
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   removeIngredientHandler = type => {
@@ -50,6 +64,7 @@ class BurgerBuilder extends Component {
     const deductions = INGREDIENTS_PRICES[type];
     const newPrice = originalPrice - deductions;
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   render() {
@@ -61,11 +76,15 @@ class BurgerBuilder extends Component {
     }
     return (
       <Aux>
+        <Modal>
+          <OrderSummary ingredients={this.state.ingredients} />
+        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disabledInfo}
+          purchasable={this.state.purchasable}
           price={this.state.totalPrice}
         />
       </Aux>
