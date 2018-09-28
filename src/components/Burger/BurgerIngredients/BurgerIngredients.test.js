@@ -7,20 +7,25 @@ import BurgerIngredients from './BurgerIngredients';
 configure({ adapter: new Adapter() });
 
 describe('BurgerIngredients component', () => {
-  test('the component exists', () => {
-    const component = shallow(<BurgerIngredients />);
-    expect(component.exists()).toBe(true);
+  it('should exists', () => {
+    const wrapper = shallow(<BurgerIngredients />);
+    expect(wrapper.exists()).toBe(true);
   });
 
-  test('it renders the correct amount of ingredients', () => {
-    const ingredientType = 'bacon';
-
-    const component = shallow(
-      <BurgerIngredients key={1} type={ingredientType} />
+  it('should render the <ingredient/>', () => {
+    let ingredient = [
+      'BreadTop',
+      'BreadBottom',
+      'Seeds1',
+      'Seeds2',
+      'Meat',
+      'Cheese',
+      'Salad',
+      'Bacon'
+    ];
+    const wrapper = shallow(<BurgerIngredients ingredient={ingredient} />);
+    expect(wrapper.find(ingredient).children()).to.have.lengthOf(
+      ingredient.length
     );
-
-    expect(component.find('bacon').length).toBe(props.ingredient.bacon);
   });
-
-  test('it renders the bread', () => {});
 });
