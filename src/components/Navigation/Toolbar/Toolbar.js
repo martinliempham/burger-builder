@@ -2,6 +2,7 @@ import React from 'react';
 import classes from './Toolbar.css';
 import Logo from '../../Logo/Logo.js';
 import NavigationItems from '../NavigationItems/NavigationItems.js';
+import SideDrawer from '../SideDrawer/SideDrawer.js';
 
 const Toolbar = props => (
   <header className={classes.Toolbar}>
@@ -9,7 +10,9 @@ const Toolbar = props => (
     <div className={classes.Logo}>
       <Logo />
     </div>
-    <NavigationItems />
+    <nav className={classes.DesktopOnly}>
+      <NavigationItems />
+    </nav>
   </header>
 );
 
